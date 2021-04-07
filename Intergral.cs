@@ -21,6 +21,7 @@ namespace NumericalIntegration
         private string funcString;
         private SymbolicExpression funcExpression;
         private Dictionary<string, FloatingPoint> variable;
+        private Random random;
 
         public DefineIntergral(string function, double a, double b) 
         {
@@ -28,6 +29,7 @@ namespace NumericalIntegration
             funcExpression = SymbolicExpression.Parse(function);
             variable = new Dictionary<string, FloatingPoint>();
             variable.Add("x", 0);
+            random = new Random();
             
             //Нужно ли проверять, чтобы нижняя граница была меньше верхней?
             this.a = a;
@@ -101,43 +103,38 @@ namespace NumericalIntegration
             return result;
         }
 
-        double MethodMonteKarloGeometrical(double n)
+        public double MethodMonteKarloGeometrical(double n)
         {
+            //Определение экстремумов по Y
             double yMin = 0;
             double yMax = 0;
-            Random random = new Random();
+            double valueFunc;
             for (double i = a; i < b; i += 0.001)
             {
-                double valueFunction = MathParse(funcString, i);
-                
-                if (valueFunction > yMax) yMax = valueFunction;
-                else if (valueFunction < yMin) yMin = valueFunction;
+                valueFunc = GetFunctionValue(i);
+                if (valueFunc > yMax) yMax = valueFunc;
+                else if (valueFunc < yMin) yMin = valueFunc;
             }
 
-
-            int k = 0;
+            //Генерация случайных точек
             double xRand, yRand;
             List<Point> points = new List<Point>();
             while (points.Count < n)
             {
                 xRand = random.Next((int)a, (int)b) + random.NextDouble();
                 yRand = random.Next((int)yMin, (int)yMax) + random.NextDouble();
+                if (xRand < a || xRand > b) continue;
+                if (yRand < yMin || yRand > yMax) continue;
+
+                points.Add(new Point(xRand, yRand));
             }
 
-
-
-            for (int i = 0; i < n; i++)
+            //Определение количества точек, попавших в функцию
+            int k = 0;
+            for (int i = 0; i < points.Count; i++)
             {
-                xRand = random.Next((int)a, (int)b) + random.NextDouble();
-                yRand = random.Next((int)yMin, (int)yMax) + random.NextDouble();
-                //yRand = random.Next(-1, 1) + random.NextDouble();
-
-                //else yRand = random.Next((int)yMax, (int)yMin) + random.NextDouble() - 1;
-                double valueFunction = MathParse(funcString, xRand);
-
-                //if (valueFunction > yRand) k++;
-                if ((valueFunction > 0) && (yRand < valueFunction)) k++;
-                else if ((valueFunction < 0) && (yRand > valueFunction)) k++;
+                double value = GetFunctionValue(points[i].X);
+                if ((points[i].Y > 0 && points[i].Y <= value) || (points[i].Y < 0 && points[i].Y >= value)) k++;
             }
 
             double area = (b - a) * (yMax - yMin);
@@ -145,31 +142,5 @@ namespace NumericalIntegration
 
             return result;
         }
-
-        //private List<Point> GenerateRandomValues(double xMin, double xMax, double yMin, double yMax, int countPoints)
-        //{
-        //    List<Point> points = new List<Point>();
-        //    Random random = new Random();
-
-        //    double xRand;
-        //    double yRand;
-
-        //    do
-        //    {
-        //        xRand = random.Next((int)xMin, (int)xMax) + random.NextDouble();
-        //        yRand = random.Next((int)yMin, (int)yMax) + random.NextDouble();
-
-        //        if (xRand < 0) if (xRand < xMin) continue;
-        //        if (xRand > 0) if (xRand > xMax) continue;
-
-        //        if (yRand < 0) if (yRand < yMin) continue;
-        //        if (yRand > 0) if (yRand > yMax) continue;
-
-        //        points.Add(new Point(xRand, yRand));
-        //    }
-        //    while (points.Count != countPoints);
-
-        //    return points;
-        //}
     }
 }

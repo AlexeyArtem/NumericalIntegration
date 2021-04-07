@@ -44,7 +44,9 @@ namespace NumericalIntegration
                 double a = Convert.ToDouble(TextBoxInputA.Text);
                 double b = Convert.ToDouble(TextBoxInputB.Text);
                 DefineIntergral intergral = new DefineIntergral(TextBoxInputFunc.Text, a, b);
-                LabelResult.Content = intergral.MethodRectangle(BorderMethodRectangle.Left, 0.1);
+                //LabelResult.Content = intergral.MethodRectangle(BorderMethodRectangle.Left, 0.1);
+                //LabelResult.Content = intergral.MethodMonteKarloGeometrical(100000);
+                //LabelResult.Content = intergral.MethodMonteKarlo(100000);
             }
             catch (FormatException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
