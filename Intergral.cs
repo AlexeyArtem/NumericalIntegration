@@ -95,7 +95,7 @@ namespace NumericalIntegration
             double sum = 0;
             for (int i = 0; i < n; i++)
             {
-                sum += GetFunctionValue(a + random.Next(0, (int)length - 1) + random.NextDouble());
+                sum += GetFunctionValue(a + random.Next(0, (int)length) + random.NextDouble());
             }
 
             double result = ((b - a) / n) * sum;
@@ -121,8 +121,8 @@ namespace NumericalIntegration
             List<Point> points = new List<Point>();
             while (points.Count < n)
             {
-                xRand = random.Next((int)a, (int)b) + random.NextDouble();
-                yRand = random.Next((int)yMin, (int)yMax) + random.NextDouble();
+                xRand = random.Next(Convert.ToInt32(a), Convert.ToInt32(b)) + random.NextDouble();
+                yRand = random.Next(Convert.ToInt32(yMin), Convert.ToInt32(yMax)) + random.NextDouble();
                 if (xRand < a || xRand > b) continue;
                 if (yRand < yMin || yRand > yMax) continue;
 
@@ -141,6 +141,56 @@ namespace NumericalIntegration
             double result = (k / n) * area;
 
             return result;
+        }
+
+        public double MethodGauss(int n)
+        {
+            double result = 0;
+            for (int i = 0; i < n; i++)
+            {
+                result += GetCoefficientA(i, n) * GetFunctionValue(GetArgumentX(i, n));
+            }
+            return result;
+        }
+
+        private double GetArgumentX(int i, int n)
+        {
+            double x;
+            x = ((a +b) / 2) + ((b - a) / 2) * GetRootLegendrePolynomial(n, i, 1);
+            return x;
+        }
+
+        private double GetCoefficientA(int i, int n)
+        {
+            double a;
+            a = 2 / ((1 - GetRootLegendrePolynomial(n, i, 2)) * Math.Pow(GetDerivativeLegendrePolynomial(GetRootLegendrePolynomial(n, i, 1), n), 2));
+            return a;
+        }
+
+        private double GetRootLegendrePolynomial(int n, int i, int k) 
+        {
+            double t, tCurrent;
+            if(k == 0) return Math.Cos(Math.PI * (4 * i - 1) / (4 * n + 2));
+            else
+            {
+                tCurrent = GetRootLegendrePolynomial(n, i, k-1);
+                t = tCurrent - (GetLegendrePolynomial(tCurrent, n) / GetDerivativeLegendrePolynomial(tCurrent, n));
+            }
+            return t;
+        }
+
+        private double GetLegendrePolynomial(double t, int k)
+        {
+            double polinomial;
+            if (k == 0) return 1;
+            else if (k == 1) return t;
+            else polinomial = ((2 * k + 1)/(k + 1)) * t * GetLegendrePolynomial(t, k - 1) - (k / (k + 1)) * GetLegendrePolynomial(t, k - 2);
+            return polinomial;
+        }
+
+        private double GetDerivativeLegendrePolynomial(double t, int n)
+        {
+            return (n / (1 - t * t)) * (GetLegendrePolynomial(t, n - 1) - t * GetLegendrePolynomial(t, n));
         }
     }
 }

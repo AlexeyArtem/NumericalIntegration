@@ -46,7 +46,8 @@ namespace NumericalIntegration
                 DefineIntergral intergral = new DefineIntergral(TextBoxInputFunc.Text, a, b);
                 //LabelResult.Content = intergral.MethodRectangle(BorderMethodRectangle.Left, 0.1);
                 //LabelResult.Content = intergral.MethodMonteKarloGeometrical(100000);
-                //LabelResult.Content = intergral.MethodMonteKarlo(100000);
+                //LabelResult.Content = intergral.MethodMonteKarlo(1000000);
+                LabelResult.Content = intergral.MethodGauss(1);
             }
             catch (FormatException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
