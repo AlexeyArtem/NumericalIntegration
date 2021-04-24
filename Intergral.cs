@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using MathNet.Symbolics;
+using NumericsMethodsLibrary;
 
 namespace NumericalIntegration
 {
@@ -64,6 +65,29 @@ namespace NumericalIntegration
                 result += (GetFunctionValue(i) + GetFunctionValue(i + h)) * h;
             }
             result *= 0.5;
+
+            return result;
+        }
+
+        public double MethodSplains(double h)
+        {
+            double sum1 = 0;
+            double sum2 = 0;
+            List<Point> points = new List<Point>();
+            for (double i = a; i < b; i += h)
+            {
+                points.Add(new Point(i, GetFunctionValue(i)));
+            }
+            Derivative derivative = new Derivative(points);
+            for (double i = a; i <= b; i += h)
+            {
+                if (i == b) break;
+                sum1 += (GetFunctionValue(i) + GetFunctionValue(i + h)) * h;
+                sum2 += derivative.CubicInterpolationMethod(3).DerivativePoints.IndexOf(new Point(i, GetFunctionValue(i + h))) * Math.Pow(h, 3);
+            }
+            sum1 *= 0.5;
+            sum2 *= 1 / 12;
+            double result = sum1 - sum2;
 
             return result;
         }
@@ -150,6 +174,8 @@ namespace NumericalIntegration
             {
                 result += GetCoefficientA(i, n) * GetFunctionValue(GetArgumentX(i, n));
             }
+
+            result *= (b - a) / 2;
             return result;
         }
 
@@ -184,6 +210,7 @@ namespace NumericalIntegration
             double polinomial;
             if (k == 0) return 1;
             else if (k == 1) return t;
+            //else if(k + 1 == n) 
             else polinomial = ((2 * k + 1)/(k + 1)) * t * GetLegendrePolynomial(t, k - 1) - (k / (k + 1)) * GetLegendrePolynomial(t, k - 2);
             return polinomial;
         }

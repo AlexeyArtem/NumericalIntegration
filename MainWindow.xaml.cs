@@ -43,11 +43,32 @@ namespace NumericalIntegration
             {
                 double a = Convert.ToDouble(TextBoxInputA.Text);
                 double b = Convert.ToDouble(TextBoxInputB.Text);
-                DefineIntergral intergral = new DefineIntergral(TextBoxInputFunc.Text, a, b);
-                //LabelResult.Content = intergral.MethodRectangle(BorderMethodRectangle.Left, 0.1);
-                //LabelResult.Content = intergral.MethodMonteKarloGeometrical(100000);
-                //LabelResult.Content = intergral.MethodMonteKarlo(1000000);
-                LabelResult.Content = intergral.MethodGauss(1);
+                DefineIntergral integral = new DefineIntergral(TextBoxInputFunc.Text, a, b);
+
+                switch (CbSelectMethod.SelectedIndex)
+                {
+                    case 0:
+                        LabelResult.Content = integral.MethodRectangle(BorderMethodRectangle.Left, 0.1);
+                        break;
+                    case 1:
+                        LabelResult.Content = integral.MethodTrapezoid(0.1);
+                        break;
+                    case 2:
+                        LabelResult.Content = integral.MethodParabol(0.1);
+                        break;
+                    case 3:
+                        LabelResult.Content = integral.MethodSplains(0.1);
+                        break;
+                    case 4:
+                        LabelResult.Content = integral.MethodMonteKarlo(Convert.ToDouble(TbMonteKarloGeo.Text));
+                        break;
+                    case 5:
+                        LabelResult.Content = integral.MethodMonteKarloGeometrical(Convert.ToDouble(TbMonteKarloGeo.Text));
+                        break;
+                    case 6:
+                        LabelResult.Content = integral.MethodGauss(2);
+                        break;
+                }
             }
             catch (FormatException ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
