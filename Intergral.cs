@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using MathNet.Symbolics;
-using NumericsMethodsLibrary;
+using NumericalMethods;
 
 namespace NumericalIntegration
 {
