@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NumericalIntegration"
+        xmlns:local="clr-namespace:NumericalIntegration" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         Title="Решение интегралов" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -27,7 +27,8 @@
             <ColumnDefinition Width="3*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical">
-            <Label HorizontalAlignment="Center">Ввод данных:</Label> <!--Изменить формулировку-->
+            <Label HorizontalAlignment="Center">Ввод данных:</Label>
+            <!--Изменить формулировку-->
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel Orientation="Vertical">
                     <TextBox x:Name="TextBoxInputB" Text="10" Style="{StaticResource ResourceKey=TbInputBoundaries}"></TextBox>
@@ -50,9 +51,10 @@
             </ComboBox>
             <Button x:Name="BtFindSolution" Margin="0,15,0,0" Style="{StaticResource ResourceKey=MenuControls}" Click="BtFindSolution_Click">Найти решение</Button>
             <Label x:Name="LbMonteKarloGeo">Введите кол-во точек:</Label>
-            <TextBox x:Name="TbMonteKarloGeo"></TextBox>
+            <TextBox x:Name="UdCountPoints"></TextBox>
             <Label Margin="0,15,0,0">Численный ответ:</Label>
             <Label x:Name="LabelResult"></Label>
         </StackPanel>
+        <lvc:CartesianChart x:Name="Chart" Grid.Column="1" LegendLocation="Bottom"></lvc:CartesianChart>
     </Grid>
 </Window>

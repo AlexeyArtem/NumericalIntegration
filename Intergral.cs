@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -127,7 +128,7 @@ namespace NumericalIntegration
             return result;
         }
 
-        public double MethodMonteKarloGeometrical(double n)
+        public double MethodMonteKarloGeometrical(double n, out List<Point> points)
         {
             //Определение экстремумов по Y
             double yMin = 0;
@@ -142,7 +143,8 @@ namespace NumericalIntegration
 
             //Генерация случайных точек
             double xRand, yRand;
-            List<Point> points = new List<Point>();
+            points = new List<Point>();
+
             while (points.Count < n)
             {
                 xRand = random.Next(Convert.ToInt32(a), Convert.ToInt32(b)) + random.NextDouble();
@@ -167,10 +169,78 @@ namespace NumericalIntegration
             return result;
         }
 
+        public double MethodChebyshev(int n)
+        {
+            double result = 0;
+
+            double[,] t = new double[n, n];
+            double[,] freeTerm = new double[n, 1];
+            for (double i = 0; i < t.GetLength(0); i++)
+            {
+                for (double j = 0; j < t.GetLength(1); j++)
+                {
+                    //Запонение матрицы свободных членов
+                    if (j == 0) freeTerm[(int)i, (int)j] = ((1 + Math.Pow(-1, i + 1)) / 2) * ((i + 1) / (i + 1 + 1));
+                }
+            }
+
+            List<MathNet.Symbolics.Expression> equations;
+            ObservableCollection<string> strEquations = new ObservableCollection<string>();
+            List<string> variablesName = new List<string>();
+            double accuracy = 0.01;
+
+            for (int i = 0; i < t.GetLength(0); i++)
+            {
+                for (int j = 0; j < 6; j++)
+                {
+
+                }
+            }
+
+            strEquations.Add("x1+x2+x3+x4+x5=" + t[0, 0]);
+            strEquations.Add("x1^2+x2^2+x3^2+x4^2+x5^2=" + t[1, 0]);
+            strEquations.Add("x1^3+x2^3+x3^3+x4^3+x5^3=" + t[2, 0]);
+            strEquations.Add("x1^4+x2^4+x3^4+x4^4+x5^4=" + t[3, 0]);
+            strEquations.Add("x1^5+x2^5+x3^5+x4^5+x5^5=" + t[4, 0]);
+
+            variablesName.Add("x1");
+            variablesName.Add("x2");
+            variablesName.Add("x3");
+            variablesName.Add("x4");
+            variablesName.Add("x5");
+
+            equations = GetListEquations(strEquations);
+
+            
+
+
+            //for (int i = 1; i <= n; i++)
+            //{
+            //    result += (2 / n) * GetFunctionValue();
+            //}
+
+            result *= (b - a) / 2;
+            return result;
+
+            return result;
+        }
+
+        private List<MathNet.Symbolics.Expression> GetListEquations(ObservableCollection<string> strEquations)
+        {
+            List<MathNet.Symbolics.Expression> equations = new List<MathNet.Symbolics.Expression>();
+
+            for (int i = 0; i < strEquations.Count; i++)
+            {
+                equations.Add(MathNet.Symbolics.Infix.ParseOrThrow(strEquations[i].Replace('=', '-')));
+            }
+
+            return equations;
+        }
+
         public double MethodGauss(int n)
         {
             double result = 0;
-            for (int i = 0; i < n; i++)
+            for (int i = 1; i <= n; i++)
             {
                 result += GetCoefficientA(i, n) * GetFunctionValue(GetArgumentX(i, n));
             }
@@ -182,7 +252,7 @@ namespace NumericalIntegration
         private double GetArgumentX(int i, int n)
         {
             double x;
-            x = ((a +b) / 2) + ((b - a) / 2) * GetRootLegendrePolynomial(n, i, 1);
+            x = ((a + b) / 2) + ((b - a) / 2) * GetRootLegendrePolynomial(n, i, 1);
             return x;
         }
 
@@ -196,7 +266,7 @@ namespace NumericalIntegration
         private double GetRootLegendrePolynomial(int n, int i, int k) 
         {
             double t, tCurrent;
-            if(k == 0) return Math.Cos(Math.PI * (4 * i - 1) / (4 * n + 2));
+            if(k == 0) return Math.Cos((Math.PI * (4 * i - 1)) / (4 * n + 2));
             else
             {
                 tCurrent = GetRootLegendrePolynomial(n, i, k-1);
