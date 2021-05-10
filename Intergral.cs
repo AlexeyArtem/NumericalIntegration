@@ -8,6 +8,7 @@ using System.Windows;
 using MathNet.Symbolics;
 using NumericalMethods;
 
+
 namespace NumericalIntegration
 {
     enum BorderMethodRectangle 
