@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using MathNet.Symbolics;
-using NumericalMethods;
+//using NumericalMethods;
 
 
 namespace NumericalIntegration
@@ -71,28 +71,28 @@ namespace NumericalIntegration
             return result;
         }
 
-        public double MethodSplains(double h)
-        {
-            double sum1 = 0;
-            double sum2 = 0;
-            List<Point> points = new List<Point>();
-            for (double i = a; i < b; i += h)
-            {
-                points.Add(new Point(i, GetFunctionValue(i)));
-            }
-            Derivative derivative = new Derivative(points);
-            for (double i = a; i <= b; i += h)
-            {
-                if (i == b) break;
-                sum1 += (GetFunctionValue(i) + GetFunctionValue(i + h)) * h;
-                sum2 += derivative.CubicInterpolationMethod(3).DerivativePoints.IndexOf(new Point(i, GetFunctionValue(i + h))) * Math.Pow(h, 3);
-            }
-            sum1 *= 0.5;
-            sum2 *= 1 / 12;
-            double result = sum1 - sum2;
+        //public double MethodSplains(double h)
+        //{
+        //    double sum1 = 0;
+        //    double sum2 = 0;
+        //    List<Point> points = new List<Point>();
+        //    for (double i = a; i < b; i += h)
+        //    {
+        //        points.Add(new Point(i, GetFunctionValue(i)));
+        //    }
+        //    Derivative derivative = new Derivative(points);
+        //    for (double i = a; i <= b; i += h)
+        //    {
+        //        if (i == b) break;
+        //        sum1 += (GetFunctionValue(i) + GetFunctionValue(i + h)) * h;
+        //        sum2 += derivative.CubicInterpolationMethod(3).DerivativePoints.IndexOf(new Point(i, GetFunctionValue(i + h))) * Math.Pow(h, 3);
+        //    }
+        //    sum1 *= 0.5;
+        //    sum2 *= 1 / 12;
+        //    double result = sum1 - sum2;
 
-            return result;
-        }
+        //    return result;
+        //}
 
         public double MethodParabol(double h)
         {
@@ -170,69 +170,114 @@ namespace NumericalIntegration
             return result;
         }
 
+        //public double MethodChebyshev(int n)
+        //{
+        //    double result = 0;
+
+        //    double[,] t = new double[n, n];
+        //    double[,] freeTerm = new double[n, 1];
+        //    for (double i = 0; i < t.GetLength(0); i++)
+        //    {
+        //        for (double j = 0; j < t.GetLength(1); j++)
+        //        {
+        //            //Запонение матрицы свободных членов
+        //            if (j == 0) freeTerm[(int)i, (int)j] = ((1 + Math.Pow(-1, i + 1)) / 2) * ((i + 1) / (i + 1 + 1));
+        //        }
+        //    }
+
+        //    List<MathNet.Symbolics.Expression> equations;
+        //    ObservableCollection<string> strEquations = new ObservableCollection<string>();
+        //    List<string> variablesName = new List<string>();
+        //    double accuracy = 0.01;
+
+        //    strEquations.Add("x1+x2+x3+x4+x5=" + t[0, 0]);
+        //    strEquations.Add("x1^2+x2^2+x3^2+x4^2+x5^2=" + t[1, 0]);
+        //    strEquations.Add("x1^3+x2^3+x3^3+x4^3+x5^3=" + t[2, 0]);
+        //    strEquations.Add("x1^4+x2^4+x3^4+x4^4+x5^4=" + t[3, 0]);
+        //    strEquations.Add("x1^5+x2^5+x3^5+x4^5+x5^5=" + t[4, 0]);
+
+        //    variablesName.Add("x1");
+        //    variablesName.Add("x2");
+        //    variablesName.Add("x3");
+        //    variablesName.Add("x4");
+        //    variablesName.Add("x5");
+
+        //    equations = GetListEquations(strEquations);
+
+
+
+
+        //    //for (int i = 1; i <= n; i++)
+        //    //{
+        //    //    result += (2 / n) * GetFunctionValue();
+        //    //}
+
+        //    result *= (b - a) / 2;
+        //    return result;
+
+        //    return result;
+        //}
+
+        //private List<MathNet.Symbolics.Expression> GetListEquations(ObservableCollection<string> strEquations)
+        //{
+        //    List<MathNet.Symbolics.Expression> equations = new List<MathNet.Symbolics.Expression>();
+
+        //    for (int i = 0; i < strEquations.Count; i++)
+        //    {
+        //        equations.Add(MathNet.Symbolics.Infix.ParseOrThrow(strEquations[i].Replace('=', '-')));
+        //    }
+
+        //    return equations;
+        //}
         public double MethodChebyshev(int n)
         {
-            double result = 0;
-
-            double[,] t = new double[n, n];
-            double[,] freeTerm = new double[n, 1];
-            for (double i = 0; i < t.GetLength(0); i++)
+            double[] freeTerm = new double[n];
+            for (double i = 0; i < freeTerm.Length; i++)
             {
-                for (double j = 0; j < t.GetLength(1); j++)
-                {
-                    //Запонение матрицы свободных членов
-                    if (j == 0) freeTerm[(int)i, (int)j] = ((1 + Math.Pow(-1, i + 1)) / 2) * ((i + 1) / (i + 1 + 1));
-                }
+                freeTerm[(int)i] = ((1 + Math.Pow(-1, i + 1)) / 2) * ((i + 1) / (i + 1 + 1));
             }
 
-            List<MathNet.Symbolics.Expression> equations;
-            ObservableCollection<string> strEquations = new ObservableCollection<string>();
+            string[] strEquations = new string[n];
+            for (int i = 0; i < strEquations.Length; i++)
+            {
+                string equation = "";
+                for (int j = 0; j < n; j++)
+                {
+                    if (i == 0) equation += "x" + (j + 1);
+                    else equation += "x" + (j + 1) + "^" + (i + 1);
+                    if (j != n - 1) equation += "+";
+                }
+                equation += "=" + freeTerm[i];
+                strEquations[i] = equation;
+            }
+            List<MathNet.Symbolics.Expression> equations = GetListEquations(strEquations);
+
             List<string> variablesName = new List<string>();
-            double accuracy = 0.01;
-
-            for (int i = 0; i < t.GetLength(0); i++)
+            for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < 6; j++)
-                {
-
-                }
+                variablesName.Add("x" + (i + 1));
             }
+            SystemNonlinearEquations systemNonlinearEquations = new SystemNonlinearEquations(equations, variablesName, 0.01);
+            Result res = systemNonlinearEquations.NewtonsMethod();
 
-            strEquations.Add("x1+x2+x3+x4+x5=" + t[0, 0]);
-            strEquations.Add("x1^2+x2^2+x3^2+x4^2+x5^2=" + t[1, 0]);
-            strEquations.Add("x1^3+x2^3+x3^3+x4^3+x5^3=" + t[2, 0]);
-            strEquations.Add("x1^4+x2^4+x3^4+x4^4+x5^4=" + t[3, 0]);
-            strEquations.Add("x1^5+x2^5+x3^5+x4^5+x5^5=" + t[4, 0]);
-
-            variablesName.Add("x1");
-            variablesName.Add("x2");
-            variablesName.Add("x3");
-            variablesName.Add("x4");
-            variablesName.Add("x5");
-
-            equations = GetListEquations(strEquations);
-
-            
-
-
-            //for (int i = 1; i <= n; i++)
-            //{
-            //    result += (2 / n) * GetFunctionValue();
-            //}
+            double result = 0;
+            for (int i = 1; i <= n; i++)
+            {
+                double x = ((a + b) / 2) + ((b - a) / 2) * res[i - 1];
+                result += (2 / n) * GetFunctionValue(x);
+            }
 
             result *= (b - a) / 2;
             return result;
-
-            return result;
         }
 
-        private List<MathNet.Symbolics.Expression> GetListEquations(ObservableCollection<string> strEquations)
+        private List<MathNet.Symbolics.Expression> GetListEquations(string[] strEquations)
         {
             List<MathNet.Symbolics.Expression> equations = new List<MathNet.Symbolics.Expression>();
 
-            for (int i = 0; i < strEquations.Count; i++)
+            for (int i = 0; i < strEquations.Length; i++)
             {
-                equations.Add(MathNet.Symbolics.Infix.ParseOrThrow(strEquations[i].Replace('=', '-')));
+                equations.Add(Infix.ParseOrThrow(strEquations[i].Replace('=', '-').Replace(",", ".")));
             }
 
             return equations;

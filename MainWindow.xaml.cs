@@ -69,7 +69,7 @@ namespace NumericalIntegration
                         LabelResult.Content = integral.MethodParabol(0.1);
                         break;
                     case 3:
-                        LabelResult.Content = integral.MethodSplains(0.1);
+                        //LabelResult.Content = integral.MethodSplains(0.1);
                         break;
                     case 4:
                         LabelResult.Content = integral.MethodMonteKarlo(Convert.ToDouble(UdCountPoints.Text));
@@ -92,7 +92,7 @@ namespace NumericalIntegration
                         LabelResult.Content = integral.MethodGauss(3);
                         break;
                     case 7:
-                        LabelResult.Content = integral.MethodChebyshev(3);
+                        LabelResult.Content = integral.MethodChebyshev(5);
                         break;
                 }
             }
