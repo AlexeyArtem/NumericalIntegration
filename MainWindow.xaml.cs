@@ -72,7 +72,7 @@ namespace NumericalIntegration
                         //LabelResult.Content = integral.MethodSplains(0.1);
                         break;
                     case 4:
-                        LabelResult.Content = integral.MethodMonteKarlo(Convert.ToDouble(UdCountPoints.Text));
+                        LabelResult.Content = integral.MethodMonteKarlo(Convert.ToInt32(UdCountPoints.Text));
                         break;
                     case 5:
                         List<Point> randPoints;
@@ -83,13 +83,11 @@ namespace NumericalIntegration
                         List<Point> points = GeneratePoints();
                         for (int i = 0; i < points.Count; i++) functionLine.Values.Add(new ObservablePoint(points[i].X, points[i].Y));
                         for (int i = 0; i < randPoints.Count; i++) scatterSeries.Values.Add(new ObservablePoint(randPoints[i].X, randPoints[i].Y));
-
-
                         seriesCollection.Add(functionLine);
                         seriesCollection.Add(scatterSeries);
                         break;
                     case 6:
-                        LabelResult.Content = integral.MethodGauss(3);
+                        LabelResult.Content = integral.MethodGauss(1);
                         break;
                     case 7:
                         LabelResult.Content = integral.MethodChebyshev(5);

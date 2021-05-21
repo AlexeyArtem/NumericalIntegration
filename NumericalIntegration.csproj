@@ -63,6 +63,9 @@
     <Reference Include="MathParser, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>packages\MathosParser.2.0.0\lib\net471\MathParser.dll</HintPath>
     </Reference>
+    <Reference Include="NumericalMethodsLibrary">
+      <HintPath>packages\NumericalMethods.1.0.5\NumericalMethodsLibrary.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Numerics" />
@@ -125,9 +128,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
