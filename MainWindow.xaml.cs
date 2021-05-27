@@ -31,20 +31,19 @@ namespace NumericalIntegration
         public MainWindow()
         {
             InitializeComponent();
+            CbSelectMethod.SelectedIndex = 0;
+
             seriesCollection = new SeriesCollection();
             functionLine = new LineSeries { Values = new ChartValues<ObservablePoint>(), PointGeometrySize = 0, Title = "f(x)" };
             scatterSeries = new ScatterSeries { Values = new ChartValues<ObservablePoint>(), Title = "Точки", MinPointShapeDiameter = 7, MaxPointShapeDiameter = 20};
+            seriesCollection.Add(functionLine);
+            seriesCollection.Add(scatterSeries);
+
             Chart.Series = seriesCollection;
         }
 
         private void BtFindSolution_Click(object sender, RoutedEventArgs e)
         {
-            if (TextBoxInputA.Text == string.Empty || TextBoxInputB.Text == string.Empty)
-            {
-                MessageBox.Show("Введите границы интегрирования.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
             if (TextBoxInputFunc.Text == string.Empty)
             {
                 MessageBox.Show("Введите подинтегральную функцию.", "Уведомление", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -53,10 +52,9 @@ namespace NumericalIntegration
 
             try
             {
-                double a = Convert.ToDouble(TextBoxInputA.Text);
-                double b = Convert.ToDouble(TextBoxInputB.Text);
-                DefineIntergral integral = new DefineIntergral(TextBoxInputFunc.Text, a, b);
-
+                DefineIntergral integral = new DefineIntergral(TextBoxInputFunc.Text, (double)UpDownInputA.Value, (double)UpDownInputB.Value);
+                scatterSeries.Values.Clear();
+                functionLine.Values.Clear();
                 switch (CbSelectMethod.SelectedIndex)
                 {
                     case 0:
@@ -76,15 +74,10 @@ namespace NumericalIntegration
                         break;
                     case 5:
                         List<Point> randPoints;
-                        LabelResult.Content = integral.MethodMonteKarloGeometrical(Convert.ToDouble(UdCountPoints.Text), out randPoints);
-                        seriesCollection.Clear();
-                        scatterSeries.Values.Clear();
-                        functionLine.Values.Clear();
-                        List<Point> points = GeneratePoints();
+                        LabelResult.Content = integral.MethodMonteKarloGeometrical((int)UdCountPoints.Value, out randPoints);
+                        List<Point> points = GeneratingFunctionPoints();
                         for (int i = 0; i < points.Count; i++) functionLine.Values.Add(new ObservablePoint(points[i].X, points[i].Y));
                         for (int i = 0; i < randPoints.Count; i++) scatterSeries.Values.Add(new ObservablePoint(randPoints[i].X, randPoints[i].Y));
-                        seriesCollection.Add(functionLine);
-                        seriesCollection.Add(scatterSeries);
                         break;
                     case 6:
                         LabelResult.Content = integral.MethodGauss(1);
@@ -98,7 +91,7 @@ namespace NumericalIntegration
             catch (Exception ex) { MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error); }
         }
 
-        private List<Point> GeneratePoints() 
+        private List<Point> GeneratingFunctionPoints() 
         {
             SymbolicExpression expression = SymbolicExpression.Parse(TextBoxInputFunc.Text);
             Dictionary<string, FloatingPoint> variable = new Dictionary<string, FloatingPoint>();
@@ -106,21 +99,30 @@ namespace NumericalIntegration
 
             List<Point> points = new List<Point>();
             decimal step = 0;
-            decimal b = Convert.ToDecimal(TextBoxInputB.Text);
+            decimal b = (decimal)UpDownInputB.Value;
             while (step <= b) 
             {
                 variable["x"] = (double)step;
                 points.Add(new Point((double)step, expression.Evaluate(variable).RealValue));
                 step += (decimal)0.1;
             }
-            //for (int i = 0; i < count; i++)
-            //{
-            //    variable["x"] = (double)step;
-            //    points.Add(new Point((double)step, expression.Evaluate(variable).RealValue));
-            //    step += (decimal)0.1;
-            //}
 
             return points;
+        }
+
+        private void CbSelectMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ComboBoxItem item = CbSelectMethod.SelectedItem as ComboBoxItem;
+            if (item == ItemMonteCarlo || item == ItemGeometricMonteCarlo)
+            {
+                LbCountPoints.Visibility = Visibility.Visible;
+                UdCountPoints.Visibility = Visibility.Visible;
+            }
+            else 
+            {
+                LbCountPoints.Visibility = Visibility.Hidden;
+                UdCountPoints.Visibility = Visibility.Hidden;
+            }
         }
     }
 }

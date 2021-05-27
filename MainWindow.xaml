@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NumericalIntegration" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         Title="Решение интегралов" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
@@ -11,7 +12,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
         </Style>
         <Style x:Key="TbInputBoundaries">
-            <Setter Property="Control.Width" Value="25"></Setter>
+            <Setter Property="Control.Width" Value="42"></Setter>
             <Setter Property="Control.Height" Value="25"></Setter>
             <Setter Property="Control.VerticalContentAlignment" Value="Center"></Setter>
         </Style>
@@ -28,30 +29,28 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical">
             <Label HorizontalAlignment="Center">Ввод данных:</Label>
-            <!--Изменить формулировку-->
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel Orientation="Vertical">
-                    <TextBox x:Name="TextBoxInputB" Text="10" Style="{StaticResource ResourceKey=TbInputBoundaries}"></TextBox>
+                    <xctk:DoubleUpDown x:Name="UpDownInputB" Text="10" Style="{StaticResource ResourceKey=TbInputBoundaries}"></xctk:DoubleUpDown>
                     <TextBlock FontSize="40" Text="∫" Height="66" Width="24"></TextBlock>
-                    <!--<Label FontSize="40" Height="75">∫</Label>-->
-                    <TextBox x:Name="TextBoxInputA" Text="0" Style="{StaticResource ResourceKey=TbInputBoundaries}"></TextBox>
+                    <xctk:DoubleUpDown x:Name="UpDownInputA" Value="0" Style="{StaticResource ResourceKey=TbInputBoundaries}"></xctk:DoubleUpDown>
                 </StackPanel>
                 <TextBox x:Name="TextBoxInputFunc" Width="120" Height="25" VerticalAlignment="Center" Text="sin(x)"></TextBox>
             </StackPanel>
             <Label HorizontalAlignment="Center" Margin="0,15,0,0">Выбор метода решения:</Label>
-            <ComboBox x:Name="CbSelectMethod" SelectedIndex="0" Style="{StaticResource ResourceKey=MenuControls}">
+            <ComboBox x:Name="CbSelectMethod" Style="{StaticResource ResourceKey=MenuControls}" SelectionChanged="CbSelectMethod_SelectionChanged">
                 <ComboBoxItem>Метод прямоугольников</ComboBoxItem>
                 <ComboBoxItem>Метод трапеций</ComboBoxItem>
                 <ComboBoxItem>Метод парабол</ComboBoxItem>
                 <ComboBoxItem>Метод сплайнов</ComboBoxItem>
-                <ComboBoxItem>Метод Монте-Карло</ComboBoxItem>
-                <ComboBoxItem>Метод Монте-Карло (геом.)</ComboBoxItem>
+                <ComboBoxItem x:Name="ItemMonteCarlo">Метод Монте-Карло</ComboBoxItem>
+                <ComboBoxItem x:Name="ItemGeometricMonteCarlo">Метод Монте-Карло (геом.)</ComboBoxItem>
                 <ComboBoxItem>Метод Гаусса</ComboBoxItem>
                 <ComboBoxItem>Метод Чебышева</ComboBoxItem>
             </ComboBox>
             <Button x:Name="BtFindSolution" Margin="0,15,0,0" Style="{StaticResource ResourceKey=MenuControls}" Click="BtFindSolution_Click">Найти решение</Button>
-            <Label x:Name="LbMonteKarloGeo">Введите кол-во точек:</Label>
-            <TextBox x:Name="UdCountPoints"></TextBox>
+            <Label HorizontalAlignment="Center" x:Name="LbCountPoints">Ввод кол-ва точек:</Label>
+            <xctk:IntegerUpDown Minimum="100" Value="100" Style="{StaticResource ResourceKey=MenuControls}" Height="25" x:Name="UdCountPoints"></xctk:IntegerUpDown>
             <Label Margin="0,15,0,0">Численный ответ:</Label>
             <Label x:Name="LabelResult"></Label>
         </StackPanel>
