@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:local="clr-namespace:NumericalIntegration" xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="Решение интегралов" Height="450" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
+        Title="Решение интегралов" Height="460" Width="800" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
         <Style TargetType="TextBox">
             <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
@@ -28,18 +29,16 @@
         </Grid.ColumnDefinitions>
         <StackPanel Orientation="Vertical">
             <Label HorizontalAlignment="Center">Ввод данных:</Label>
-            <!--Изменить формулировку-->
             <StackPanel Grid.Column="0" Orientation="Horizontal" HorizontalAlignment="Center">
                 <StackPanel Orientation="Vertical">
                     <TextBox x:Name="TextBoxInputB" Text="10" Style="{StaticResource ResourceKey=TbInputBoundaries}"></TextBox>
                     <TextBlock FontSize="40" Text="∫" Height="66" Width="24"></TextBlock>
-                    <!--<Label FontSize="40" Height="75">∫</Label>-->
                     <TextBox x:Name="TextBoxInputA" Text="0" Style="{StaticResource ResourceKey=TbInputBoundaries}"></TextBox>
                 </StackPanel>
                 <TextBox x:Name="TextBoxInputFunc" Width="120" Height="25" VerticalAlignment="Center" Text="sin(x)"></TextBox>
             </StackPanel>
             <Label HorizontalAlignment="Center" Margin="0,15,0,0">Выбор метода решения:</Label>
-            <ComboBox x:Name="CbSelectMethod" SelectedIndex="0" Style="{StaticResource ResourceKey=MenuControls}">
+            <ComboBox x:Name="CbSelectMethod"  SelectionChanged="CbSelectMethod_SelectionChanged" Style="{StaticResource ResourceKey=MenuControls}">
                 <ComboBoxItem>Метод прямоугольников</ComboBoxItem>
                 <ComboBoxItem>Метод трапеций</ComboBoxItem>
                 <ComboBoxItem>Метод парабол</ComboBoxItem>
@@ -49,9 +48,25 @@
                 <ComboBoxItem>Метод Гаусса</ComboBoxItem>
                 <ComboBoxItem>Метод Чебышева</ComboBoxItem>
             </ComboBox>
-            <Button x:Name="BtFindSolution" Margin="0,15,0,0" Style="{StaticResource ResourceKey=MenuControls}" Click="BtFindSolution_Click">Найти решение</Button>
-            <Label x:Name="LbMonteKarloGeo">Введите кол-во точек:</Label>
-            <TextBox x:Name="UdCountPoints"></TextBox>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0" Style="{StaticResource ResourceKey=MenuControls}">
+                <Label x:Name="LbStep" >Шаг:</Label>
+                <xctk:DoubleUpDown x:Name="UdStep" Height="25" Width="50"></xctk:DoubleUpDown>
+            </StackPanel>
+            <Grid>
+                <StackPanel Grid.Row="0">
+                    <Label x:Name="LbMonteKarloGeo" Visibility="Hidden" Style="{StaticResource ResourceKey=MenuControls}">Введите кол-во точек:</Label>
+                    <xctk:DoubleUpDown x:Name="UdCountPoints" Visibility="Hidden" Style="{StaticResource ResourceKey=MenuControls}"></xctk:DoubleUpDown>
+                </StackPanel>
+                <StackPanel Grid.Row="0" >
+                    <Label x:Name="LbRectangleMethod" Visibility="Hidden" HorizontalAlignment="Center" Style="{StaticResource ResourceKey=MenuControls}">Тип метода:</Label>
+                    <ComboBox x:Name="CbRectangleMethod" Visibility="Hidden" SelectionChanged="CbRectangleMethod_SelectionChanged" Style="{StaticResource ResourceKey=MenuControls}">
+                        <ComboBoxItem>Левая граница</ComboBoxItem>
+                        <ComboBoxItem>Середина отрезка</ComboBoxItem>
+                        <ComboBoxItem>Правая граница</ComboBoxItem>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+            <Button x:Name="BtFindSolution" Margin="0,10,0,0" Style="{StaticResource ResourceKey=MenuControls}" Click="BtFindSolution_Click">Найти решение</Button>
             <Label Margin="0,15,0,0">Численный ответ:</Label>
             <Label x:Name="LabelResult"></Label>
         </StackPanel>

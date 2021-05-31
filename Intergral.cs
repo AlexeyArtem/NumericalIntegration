@@ -7,18 +7,19 @@ using System.Threading.Tasks;
 using System.Windows;
 using MathNet.Symbolics;
 using NumericalMethods;
+using SolutionSystemNonlinearEquation;
 
 
 namespace NumericalIntegration
 {
-    enum BorderMethodRectangle 
+    public enum BorderMethodRectangle 
     {
         Left,
         Middle,
         Right
     }
     
-    class DefineIntergral
+    public class DefineIntergral
     {
         private double a, b;
         private string funcString;

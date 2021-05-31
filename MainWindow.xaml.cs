@@ -60,13 +60,15 @@ namespace NumericalIntegration
                 switch (CbSelectMethod.SelectedIndex)
                 {
                     case 0:
-                        LabelResult.Content = integral.MethodRectangle(BorderMethodRectangle.Left, 0.1);
+                        if(CbRectangleMethod.SelectedIndex == 0) LabelResult.Content = integral.MethodRectangle(BorderMethodRectangle.Left, (double)UdStep.Value);
+                        else if(CbRectangleMethod.SelectedIndex == 1) LabelResult.Content = integral.MethodRectangle(BorderMethodRectangle.Middle, (double)UdStep.Value);
+                        else if (CbRectangleMethod.SelectedIndex == 2) LabelResult.Content = integral.MethodRectangle(BorderMethodRectangle.Right, (double)UdStep.Value);
                         break;
                     case 1:
-                        LabelResult.Content = integral.MethodTrapezoid(0.1);
+                        LabelResult.Content = integral.MethodTrapezoid((double)UdStep.Value);
                         break;
                     case 2:
-                        LabelResult.Content = integral.MethodParabol(0.1);
+                        LabelResult.Content = integral.MethodParabol((double)UdStep.Value);
                         break;
                     case 3:
                         //LabelResult.Content = integral.MethodSplains(0.1);
@@ -121,6 +123,31 @@ namespace NumericalIntegration
             //}
 
             return points;
+        }
+
+        private void CbSelectMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            if (CbSelectMethod.SelectedIndex == 4 || CbSelectMethod.SelectedIndex == 5)
+            {
+                UdCountPoints.Visibility = LbMonteKarloGeo.Visibility = Visibility.Visible;
+                LbRectangleMethod.Visibility = CbRectangleMethod.Visibility = Visibility.Hidden;
+            }
+            else if (CbSelectMethod.SelectedIndex == 0)
+            {
+                LbRectangleMethod.Visibility = CbRectangleMethod.Visibility = Visibility.Visible;
+                UdCountPoints.Visibility = LbMonteKarloGeo.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                LbRectangleMethod.Visibility = CbRectangleMethod.Visibility = Visibility.Hidden;
+                UdCountPoints.Visibility = LbMonteKarloGeo.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void CbRectangleMethod_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
