@@ -22,23 +22,19 @@ namespace NumericalIntegration
     public class DefineIntergral
     {
         private double a, b;
-        private string funcString;
         private SymbolicExpression funcExpression;
         private Dictionary<string, FloatingPoint> variable;
         private Random random;
 
         public DefineIntergral(string function, double a, double b) 
         {
-            funcString = function;
+            if (a > b) throw new Exception("Нижняя граница должна быть меньше верхней");
+            this.a = a;
+            this.b = b;
             funcExpression = SymbolicExpression.Parse(function);
             variable = new Dictionary<string, FloatingPoint>();
             variable.Add("x", 0);
             random = new Random();
-            
-            //Нужно ли проверять, чтобы нижняя граница была меньше верхней?
-            this.a = a;
-            this.b = b;
-            
         }
 
         private double GetFunctionValue(double x)
